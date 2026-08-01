@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Someone shared an ordinary question with you. Answer it for yourself.">
+    <title>A shared question · Ordinary Odds</title>
+    <style>
+      :root { color-scheme: light; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #17191d; background: #f7f7f4; }
+      body { margin: 0; }
+      main { box-sizing: border-box; width: min(680px, 100%); min-height: 100vh; margin: 0 auto; padding: 72px 24px; }
+      .label { margin-bottom: 28px; color: #9b682e; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+      h1 { margin: 0 0 22px; font-family: Georgia, serif; font-size: clamp(1.9rem, 6.5vw, 3rem); font-weight: 600; line-height: 1.1; }
+      p { max-width: 580px; margin: 0 0 28px; color: #5d626b; font-size: 1.05rem; line-height: 1.6; }
+      .card { margin: 0 0 32px; padding: 22px 24px; border-left: 3px solid #9b682e; background: #1e2924; border-radius: 8px; color: #f7f7f4; }
+      .card h1 { color: #f7f7f4; margin: 0; }
+      .card .meta { margin: 14px 0 0; color: rgba(247,247,244,0.62); font-size: 0.92rem; }
+      a.cta { display: inline-block; padding: 14px 22px; border-radius: 999px; background: #176b54; color: #f7f7f4; font-weight: 650; text-decoration: none; }
+      a.plain { color: #176b54; font-weight: 650; text-underline-offset: 4px; }
+      .fallback { font-size: 0.92rem; }
+      [hidden] { display: none; }
+      footer { margin-top: 40px; color: #8b9099; font-size: 0.86rem; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="label">Ordinary Odds</div>
+
+      <div class="card">
+        <h1 id="prompt">Someone sent you an ordinary question.</h1>
+        <p class="meta" id="meta">Answer it for yourself before you read theirs.</p>
+      </div>
+
+      <p>Ordinary Odds asks eight questions about the frictions of your week, then restates each answer as what that friction needed in order to happen. No score and no comparison. Twenty-four further editions do compare you with sourced estimates, and show where every number came from. Answers stay on your iPhone. No account, no tracking, no public profile.</p>
+
+      <p>
+        <a class="cta" id="open" href="../">About Ordinary Odds</a>
+      </p>
+      <p class="fallback" id="fallback" hidden>
+        Ordinary Odds is not installed? <a class="plain" href="../">See the app</a>.
+      </p>
+
+      <footer>
+        <a class="plain" href="../privacy/">Privacy policy</a> ·
+        <a class="plain" href="../support/">Support</a>
+      </footer>
+    </main>
+
+    <script>
+      const id = new URLSearchParams(location.search).get('q');
+      if (id) {
+        const open = document.getElementById('open');
+        const fallbackURL = '../';
+        open.textContent = 'Open in Ordinary Odds';
+        open.href = 'ordinaryodds://ask?q=' + encodeURIComponent(id);
+        document.getElementById('fallback').hidden = false;
+        open.addEventListener('click', (event) => {
+          event.preventDefault();
+          window.location.href = open.href;
+          window.setTimeout(() => {
+            if (!document.hidden) window.location.href = fallbackURL;
+          }, 1200);
+        });
+        fetch('questions.json')
+          .then((response) => (response.ok ? response.json() : null))
+          .then((questions) => {
+            const prompt = questions && questions[id];
+            if (!prompt) return;
+            document.getElementById('prompt').textContent = prompt;
+            document.getElementById('meta').textContent = 'Someone answered this one. Answer it for yourself first.';
+            document.title = prompt + ' · Ordinary Odds';
+          })
+          .catch(() => {});
+      }
+    </script>
+  </body>
+</html>

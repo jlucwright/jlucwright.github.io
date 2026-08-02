@@ -1,0 +1,14 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["MWHP87645T.com.ordinaryodds.app"],
+        "components": [
+          {
+            "/": "/ordinary-odds/ask/*"
+          }
+        ]
+      }
+    ]
+  }
+}
